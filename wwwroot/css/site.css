@@ -29,3 +29,16 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+.bg-login-iue {
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), 
+                url('') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+/* Tarjeta del formulario translúcida para que resalte sin tapar del todo el fondo */
+.card-login-custom {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(5px);
+    border-radius: 16px;
+}

@@ -1,41 +1,57 @@
 @{
-    ViewData["Title"] = "Acceso Administrador - FilaU";
+    ViewData["Title"] = "Iniciar Sesión Administrador - FilaU";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow border-0 rounded-3">
-                <div class="card-header bg-dark text-white text-center py-3">
-                    <h4 class="mb-0 fw-bold"> Panel Operativo / Admin</h4>
-                    <small>Gestión de turnos y métricas de colas</small>
-                </div>
-                <div class="card-body p-4">
+<!-- Estilos para el fondo con la imagen del campus de la IUE -->
+<style>
+    .bg-login-iue {
+        background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+                    url('/images/campus-iue.jpg') no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+    }
+    .card-login-custom {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(4px);
+        border-radius: 18px;
+    }
+</style>
+
+<div class="bg-login-iue d-flex align-items-center justify-content-center py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="card card-login-custom shadow-lg border-0 p-4">
+                    <div class="text-center mb-4">
+                        <span style="font-size: 2.5rem;">⚙️</span>
+                        <h3 class="fw-bold text-dark mt-2">Acceso Admin</h3>
+                        <small class="text-muted">Gestión de Colas y Analítica IO</small>
+                    </div>
 
                     @if (ViewBag.Error != null)
                     {
-                        <div class="alert alert-danger py-2 text-center" role="alert">
-                            <small class="fw-bold">@ViewBag.Error</small>
+                        <div class="alert alert-danger py-2 small text-center" role="alert">
+                            @ViewBag.Error
                         </div>
                     }
 
                     <form asp-controller="Login" asp-action="AdminLogin" method="post">
                         <div class="mb-3">
-                            <label for="correo" class="form-label fw-bold">Correo Admin</label>
-                            <input type="email" name="correo" id="correo" class="form-control" placeholder="admin@iue.edu.co" required>
+                            <label class="form-label fw-bold small text-secondary">Correo Administrativo</label>
+                            <input type="email" name="correo" class="form-control rounded-pill py-2" placeholder="admin@iue.edu.co" required />
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label fw-bold">Clave de Acceso</label>
-                            <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-secondary">Contraseña</label>
+                            <input type="password" name="password" class="form-control rounded-pill py-2" placeholder="••••••••" required />
                         </div>
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-dark btn-lg">Ingresar al Dashboard</button>
-                            <a asp-controller="Home" asp-action="IniciarSesion" class="btn btn-outline-secondary btn-sm text-center">Volver</a>
-                        </div>
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill py-2 fw-bold shadow-sm">
+                            Ingresar al Dashboard
+                        </button>
                     </form>
 
+                    <div class="text-center mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="text-decoration-none small text-muted">← Volver al inicio</a>
+                    </div>
                 </div>
             </div>
         </div>
