@@ -12,14 +12,13 @@ namespace FilaU.Controllers
             _authService = authService;
         }
 
-        // GET: /Login/UserLogin
+
         [HttpGet]
         public IActionResult UserLogin()
         {
             return View();
         }
 
-        // POST: /Login/UserLogin
         [HttpPost]
         public IActionResult UserLogin(string correo, string password)
         {
@@ -35,14 +34,14 @@ namespace FilaU.Controllers
             return View();
         }
 
-        // GET: /Login/AdminLogin
+    
         [HttpGet]
         public IActionResult AdminLogin()
         {
             return View();
         }
 
-        // POST: /Login/AdminLogin
+        
         [HttpPost]
         public IActionResult AdminLogin(string correo, string password)
         {
