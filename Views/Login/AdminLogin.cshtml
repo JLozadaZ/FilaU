@@ -1,8 +1,43 @@
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Acceso Administrador - FilaU";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Login Administrador</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow border-0 rounded-3">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0 fw-bold">⚙️ Panel Operativo / Admin</h4>
+                    <small>Gestión de turnos y métricas de colas</small>
+                </div>
+                <div class="card-body p-4">
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger py-2 text-center" role="alert">
+                            <small class="fw-bold">@ViewBag.Error</small>
+                        </div>
+                    }
+
+                    <form asp-controller="Login" asp-action="AdminLogin" method="post">
+                        <div class="mb-3">
+                            <label for="correo" class="form-label fw-bold">Correo Admin</label>
+                            <input type="email" name="correo" id="correo" class="form-control" placeholder="admin@iue.edu.co" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-bold">Clave de Acceso</label>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-dark btn-lg">Ingresar al Dashboard</button>
+                            <a asp-controller="Home" asp-action="IniciarSesion" class="btn btn-outline-secondary btn-sm text-center">Volver</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

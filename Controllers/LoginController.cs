@@ -1,32 +1,55 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using FilaU.Models;
+using FilaU.Services;
 
-namespace FilaU.Controllers;
-
-public class LoginController : Controller
+namespace FilaU.Controllers
 {
-    public IActionResult Index()
+    public class LoginController : Controller
     {
-        return View();
-    }
+        private readonly AuthService _authService;
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public LoginController(AuthService authService)
+        {
+            _authService = authService;
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-    public IActionResult IniciarSesion()
-    {
-        return View();
-    }
-    public IActionResult PanelEstudiante()
-    {
-        return View();
+        // GET: Muestra la vista
+        [HttpGet]
+        public IActionResult UserLogin() => View();
+
+        // POST: Procesa el login del Estudiante
+        [HttpPost]
+        public IActionResult UserLogin(string correo, string password)
+        {
+            var usuario = _authService.ValidarUsuario(correo, password, "Estudiante");
+            
+            if (usuario != null)
+            {
+                // Credenciales correctas -> Redirige al Panel del Estudiante
+                return RedirectToAction("PanelEstudiante", "Panel");
+            }
+
+            ViewBag.Error = "Correo o contraseña incorrectos para el rol de Estudiante.";
+            return View();
+        }
+
+        // GET: Muestra la vista Admin
+        [HttpGet]
+        public IActionResult AdminLogin() => View();
+
+        // POST: Procesa el login del Admin
+        [HttpPost]
+        public IActionResult AdminLogin(string correo, string password)
+        {
+            var usuario = _authService.ValidarUsuario(correo, password, "Admin");
+            
+            if (usuario != null)
+            {
+                // Credenciales correctas -> Redirige al Panel Admin
+                return RedirectToAction("PanelAdmin", "Panel");
+            }
+
+            ViewBag.Error = "Usuario o contraseña de administrador incorrectos.";
+            return View();
+        }
     }
 }
