@@ -7,7 +7,6 @@ namespace FilaU.Services
         private readonly List<Turno> _turnos = new();
         private int _contadorSecuencial = 1;
 
-        // Devuelve únicamente los turnos que están "En Espera" o "Atendiendo"
         public List<Turno> ObtenerTurnosActivos()
         {
             lock (_turnos)
@@ -16,7 +15,6 @@ namespace FilaU.Services
             }
         }
 
-        // Busca si un estudiante ya tiene un turno activo
         public Turno? ObtenerTurnoPorEstudiante(string nombreEstudiante)
         {
             lock (_turnos)
@@ -25,19 +23,17 @@ namespace FilaU.Services
             }
         }
 
-        // Genera un nuevo turno para el estudiante
         public Turno GenerarTurno(string nombreEstudiante)
         {
             lock (_turnos)
             {
-                // Si ya tiene un turno activo, retornamos ese mismo
                 var existente = ObtenerTurnoPorEstudiante(nombreEstudiante);
                 if (existente != null) return existente;
 
                 var nuevoTurno = new Turno
                 {
                     Id = _contadorSecuencial,
-                    Codigo = $"A{_contadorSecuencial:D02}", // Formato: A01, A02, A03...
+                    Codigo = $"A{_contadorSecuencial:D02}",
                     NombreEstudiante = nombreEstudiante,
                     HoraSolicitud = DateTime.Now,
                     Estado = "En Espera"
@@ -49,20 +45,30 @@ namespace FilaU.Services
             }
         }
 
-        // Cambia el estado de un turno (Atender / Finalizar)
-        public void CambiarEstadoTurno(int idTurno, string nuevoEstado)
+        // Intenta cambiar el estado. Devuelve false si los 2 servidores ya están llenos al intentar atender.
+        public bool CambiarEstadoTurno(int idTurno, string nuevoEstado, int maxServidores = 2)
         {
             lock (_turnos)
             {
+                if (nuevoEstado == "Atendiendo")
+                {
+                    int actualmenteAtendiendo = _turnos.Count(t => t.Estado == "Atendiendo");
+                    if (actualmenteAtendiendo >= maxServidores)
+                    {
+                        return false; // Capacidad máxima alcanzada
+                    }
+                }
+
                 var turno = _turnos.FirstOrDefault(t => t.Id == idTurno);
                 if (turno != null)
                 {
                     turno.Estado = nuevoEstado;
+                    return true;
                 }
+                return false;
             }
         }
 
-        // Calcula cuántas personas tiene adelante un turno específico
         public int ObtenerPersonasAdelante(int idTurno)
         {
             lock (_turnos)

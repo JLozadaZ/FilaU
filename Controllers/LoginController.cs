@@ -12,17 +12,22 @@ namespace FilaU.Controllers
             _authService = authService;
         }
 
+        // GET: /Login/UserLogin
         [HttpGet]
-        public IActionResult UserLogin() => View();
+        public IActionResult UserLogin()
+        {
+            return View();
+        }
 
+        // POST: /Login/UserLogin
         [HttpPost]
         public IActionResult UserLogin(string correo, string password)
         {
             var usuario = _authService.ValidarUsuario(correo, password, "Estudiante");
-
+            
             if (usuario != null)
             {
-                // Pasamos el nombre del usuario autenticado como parámetro a la vista del panel
+                // Pasa el nombre del usuario autenticado como parámetro al panel
                 return RedirectToAction("PanelEstudiante", "Panel", new { nombre = usuario.Nombre });
             }
 
@@ -30,18 +35,21 @@ namespace FilaU.Controllers
             return View();
         }
 
+        // GET: /Login/AdminLogin
         [HttpGet]
-        public IActionResult AdminLogin() => View();
+        public IActionResult AdminLogin()
+        {
+            return View();
+        }
 
-
+        // POST: /Login/AdminLogin
         [HttpPost]
         public IActionResult AdminLogin(string correo, string password)
         {
             var usuario = _authService.ValidarUsuario(correo, password, "Admin");
-
+            
             if (usuario != null)
             {
-
                 return RedirectToAction("PanelAdmin", "Panel");
             }
 

@@ -15,6 +15,15 @@
         </div>
     </div>
 
+    <!-- ALERTA DE CAPACIDAD DE SERVIDORES -->
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show fw-bold shadow-sm mb-4" role="alert">
+            @TempData["MensajeError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <!-- SECCIÓN 1: MÉTRICAS TEÓRICAS DEL MODELO M/M/s -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
@@ -179,7 +188,9 @@
                     <div class="mb-3 p-3 border rounded bg-light">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="fw-bold mb-0">Servidor 1</h6>
-                            <span class="badge bg-success">Disponible</span>
+                            <span class="badge @(Model != null && Model.Any(t => t.Estado == "Atendiendo") ? "bg-danger" : "bg-success")">
+                                @(Model != null && Model.Any(t => t.Estado == "Atendiendo") ? "Atendiendo" : "Disponible")
+                            </span>
                         </div>
                         <small class="text-muted d-block mt-1">Capacidad: 12 clientes/hora</small>
                     </div>
@@ -187,9 +198,69 @@
                     <div class="mb-3 p-3 border rounded bg-light">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="fw-bold mb-0">Servidor 2</h6>
-                            <span class="badge bg-success">Disponible</span>
+                            <span class="badge @(Model != null && Model.Count(t => t.Estado == "Atendiendo") > 1 ? "bg-danger" : "bg-success")">
+                                @(Model != null && Model.Count(t => t.Estado == "Atendiendo") > 1 ? "Atendiendo" : "Disponible")
+                            </span>
                         </div>
                         <small class="text-muted d-block mt-1">Capacidad: 12 clientes/hora</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: MÉTRICAS EN TIEMPO REAL (ANALÍTICA EN VIVO) -->
+    <div class="card shadow-sm border-0 my-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold">🟢 Analítica del Sistema en Tiempo Real (Observada)</h5>
+            <span class="badge bg-light text-dark fs-6">Se actualiza con la fila</span>
+        </div>
+        <div class="card-body">
+            <p class="text-muted small mb-3">
+                Esta sección calcula el comportamiento real del sistema en este instante según los clientes conectados y los turnos atendidos.
+            </p>
+            <div class="row g-3">
+                <!-- Ocupación Real -->
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light text-center p-3">
+                        <small class="text-uppercase fw-bold text-muted">Utilización Actual (ρ)</small>
+                        <h4 class="fw-bold mt-2 mb-0 text-success">
+                            @(((double)ViewBag.UtilizacionReal * 100).ToString("F0"))%
+                        </h4>
+                        <small class="mt-1 text-muted">servidores ocupados hoy</small>
+                    </div>
+                </div>
+
+                <!-- P0 Real -->
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light text-center p-3">
+                        <small class="text-uppercase fw-bold text-muted">Sistema Vacío Ahora (P₀)</small>
+                        <h4 class="fw-bold mt-2 mb-0 text-primary">
+                            @(((double)ViewBag.P0Real * 100).ToString("F0"))%
+                        </h4>
+                        <small class="mt-1 text-muted">estado actual</small>
+                    </div>
+                </div>
+
+                <!-- Lq Real -->
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light text-center p-3">
+                        <small class="text-uppercase fw-bold text-muted">Personas en Cola Ahora (L_q)</small>
+                        <h4 class="fw-bold mt-2 mb-0 text-info">
+                            @ViewBag.LqReal
+                        </h4>
+                        <small class="mt-1 text-muted">estudiantes esperando</small>
+                    </div>
+                </div>
+
+                <!-- Wq Real -->
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light text-center p-3">
+                        <small class="text-uppercase fw-bold text-muted">Tiempo Espera Estimado (W_q)</small>
+                        <h4 class="fw-bold mt-2 mb-0 text-warning">
+                            @(((double)ViewBag.WqReal).ToString("F1")) min
+                        </h4>
+                        <small class="mt-1 text-muted">para el último turno</small>
                     </div>
                 </div>
             </div>
