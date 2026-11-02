@@ -10,7 +10,7 @@
             <!-- Encabezado de perfil -->
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h5 class="fw-bold mb-0">👋 Hola, @nombre</h5>
+                    <h5 class="fw-bold mb-0"> Hola, @nombre</h5>
                     <small class="text-muted">Cafetería IUE - Turno Virtual</small>
                 </div>
                 <a asp-controller="Home" asp-action="IniciarSesion" class="btn btn-outline-secondary btn-sm">Salir</a>
@@ -21,7 +21,7 @@
                 <!-- Estado 1: El estudiante no ha pedido turno -->
                 <div class="card shadow border-0 rounded-4 text-center p-4">
                     <div class="my-3">
-                        <span style="font-size: 3.5rem;">☕</span>
+                        <span style="font-size: 3.5rem;">🥪</span>
                     </div>
                     <h4 class="fw-bold">¿Listo para pedir tu almuerzo?</h4>
                     <p class="text-muted">Solicita tu turno desde el celular y evita hacer fila físicamente en la cafetería.</p>
@@ -29,7 +29,7 @@
                     <form asp-controller="Panel" asp-action="PedirTurno" method="post" class="mt-3">
                         <input type="hidden" name="nombreEstudiante" value="@nombre" />
                         <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm">
-                            🎫 Pedir Mi Turno Virtual
+                             Pedir Mi Turno Virtual
                         </button>
                     </form>
                 </div>
@@ -63,21 +63,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="alert alert-info py-2 mt-3 text-start">
-                                <small>💡 <strong>Tip:</strong> Puedes esperar sentado en el campus. Te notificaremos cuando tu turno pase a atención.</small>
-                            </div>
+                            
                         }
                         else
                         {
                             <div class="alert alert-success py-3 my-2">
-                                <h5 class="fw-bold mb-1">🎉 ¡Es tu turno!</h5>
+                                <h5 class="fw-bold mb-1"> ¡Es tu turno!</h5>
                                 <small>Acércate inmediatamente a uno de los servidores en la cafetería.</small>
                             </div>
                         }
 
                         <div class="mt-4">
                             <button class="btn btn-outline-primary w-100 rounded-pill fw-bold" onclick="location.reload()">
-                                🔄 Actualizar Estado
+                                 Actualizar Estado
                             </button>
                         </div>
                     </div>

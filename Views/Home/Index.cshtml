@@ -1,8 +1,95 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio - FilaU";
+    Layout = null; // Mantiene el diseño responsivo limpio a pantalla completa
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        .bg-home-iue {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+                        url('/images/Campus.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .card-home-custom {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .footer-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-home-iue d-flex flex-column justify-content-between p-3 min-vh-100">
+        
+        <!-- Encabezado superior / Branding -->
+        <div class="text-center pt-3">
+            <h1 class="fw-bold text-white tracking-wide display-5">FilaU </h1>
+            <p class="text-white-50">Sistema de Gestión de Turnos Virtuales — Cafetería IUE</p>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="container my-auto">
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8 d-flex justify-content-center">
+                    <div class="card card-home-custom shadow-lg border-0 p-4 p-md-5 text-center">
+                        <h2 class="fw-bold text-dark mb-3">¡Bienvenido a FilaU!</h2>
+                        <p class="text-muted mb-4">
+                            Optimiza tu tiempo pidiendo tu turno virtual desde tu dispositivo móvil o consulta el estado de la fila en tiempo real.
+                        </p>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <a asp-controller="Login" asp-action="UserLogin" class="btn btn-primary btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm">
+                                     Soy Estudiante
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a asp-controller="Login" asp-action="AdminLogin" class="btn btn-dark btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm">
+                                     Administrador
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie de página con enlace oficial a la IUE -->
+        <div class="text-center pb-3">
+            <small class="d-block text-white-50 mb-1">
+                Proyecto desarrollado para la materia de Investigación de Operaciones
+            </small>
+            <a href="https://www.iue.edu.co" target="_blank" rel="noopener noreferrer" class="footer-link small fw-bold">
+                 Visitar la página oficial de la Institución Universitaria de Envigado (IUE) →
+            </a>
+        </div>
+
+    </div>
+</body>
+</html>

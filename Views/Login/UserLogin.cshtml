@@ -1,43 +1,72 @@
 @{
-    ViewData["Title"] = "Ingreso Estudiante - FilaU";
+    ViewData["Title"] = "Iniciar Sesión Estudiante - FilaU";
+    Layout = null;
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow border-0 rounded-3">
-                <div class="card-header bg-primary text-white text-center py-3">
-                    <h4 class="mb-0 fw-bold"> Acceso Estudiantes</h4>
-                    <small>Ingresa tus datos para pedir tu turno virtual</small>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        .bg-login-iue {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), 
+                        url('/images/Campus.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .card-login-custom {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-login-iue d-flex align-items-center justify-content-center p-3">
+        <div class="card card-login-custom shadow-lg border-0 p-4 my-auto">
+            <div class="text-center mb-4">
+                <span style="font-size: 2.5rem;"></span>
+                <h3 class="fw-bold text-dark mt-2">Acceso Estudiante</h3>
+                <small class="text-muted">Plataforma de Turnos Virtuales FilaU</small>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger py-2 small text-center" role="alert">
+                    @ViewBag.Error
                 </div>
-                <div class="card-body p-4">
+            }
 
-                    @if (ViewBag.Error != null)
-                    {
-                        <div class="alert alert-danger py-2 text-center" role="alert">
-                            <small class="fw-bold">@ViewBag.Error</small>
-                        </div>
-                    }
-
-                    <form asp-controller="Login" asp-action="UserLogin" method="post">
-                        <div class="mb-3">
-                            <label for="correo" class="form-label fw-bold">Correo Institucional</label>
-                            <input type="email" name="correo" id="correo" class="form-control" placeholder="juan@iue.edu.co" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label fw-bold">Contraseña</label>
-                            <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
-                        </div>
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg">Ingresar a FilaU</button>
-                            <a asp-controller="Home" asp-action="IniciarSesion" class="btn btn-outline-secondary btn-sm text-center">Volver</a>
-                        </div>
-                    </form>
-
+            <form asp-controller="Login" asp-action="UserLogin" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold small text-secondary">Correo Institucional</label>
+                    <input type="email" name="correo" class="form-control rounded-pill py-2" placeholder="ejemplo@iue.edu.co" required />
                 </div>
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-secondary">Contraseña</label>
+                    <input type="password" name="password" class="form-control rounded-pill py-2" placeholder="••••••••" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm">
+                    Ingresar a FilaU
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <a asp-controller="Home" asp-action="Index" class="text-decoration-none small text-muted">← Volver al inicio</a>
             </div>
         </div>
     </div>
-</div>
+</body>
+</html>
