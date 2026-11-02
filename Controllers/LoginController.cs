@@ -12,11 +12,9 @@ namespace FilaU.Controllers
             _authService = authService;
         }
 
-        // GET: Muestra la vista
         [HttpGet]
         public IActionResult UserLogin() => View();
 
-        // POST: Procesa el login del Estudiante
         [HttpPost]
         public IActionResult UserLogin(string correo, string password)
         {
@@ -24,7 +22,6 @@ namespace FilaU.Controllers
             
             if (usuario != null)
             {
-                // Credenciales correctas -> Redirige al Panel del Estudiante
                 return RedirectToAction("PanelEstudiante", "Panel");
             }
 
@@ -32,11 +29,10 @@ namespace FilaU.Controllers
             return View();
         }
 
-        // GET: Muestra la vista Admin
         [HttpGet]
         public IActionResult AdminLogin() => View();
 
-        // POST: Procesa el login del Admin
+
         [HttpPost]
         public IActionResult AdminLogin(string correo, string password)
         {
@@ -44,7 +40,7 @@ namespace FilaU.Controllers
             
             if (usuario != null)
             {
-                // Credenciales correctas -> Redirige al Panel Admin
+                
                 return RedirectToAction("PanelAdmin", "Panel");
             }
 
