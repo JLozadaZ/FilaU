@@ -19,10 +19,11 @@ namespace FilaU.Controllers
         public IActionResult UserLogin(string correo, string password)
         {
             var usuario = _authService.ValidarUsuario(correo, password, "Estudiante");
-            
+
             if (usuario != null)
             {
-                return RedirectToAction("PanelEstudiante", "Panel");
+                // Pasamos el nombre del usuario autenticado como parámetro a la vista del panel
+                return RedirectToAction("PanelEstudiante", "Panel", new { nombre = usuario.Nombre });
             }
 
             ViewBag.Error = "Correo o contraseña incorrectos para el rol de Estudiante.";
@@ -37,10 +38,10 @@ namespace FilaU.Controllers
         public IActionResult AdminLogin(string correo, string password)
         {
             var usuario = _authService.ValidarUsuario(correo, password, "Admin");
-            
+
             if (usuario != null)
             {
-                
+
                 return RedirectToAction("PanelAdmin", "Panel");
             }
 

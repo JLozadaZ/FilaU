@@ -1,0 +1,198 @@
+@model List<FilaU.Models.Turno>
+@{
+    ViewData["Title"] = "Panel de Administración y Métricas IO - FilaU";
+    var metricas = ViewBag.Metricas as FilaU.Services.ResultadosModeloColas;
+}
+
+<div class="container-fluid my-4">
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold text-dark mb-0">⚙️ Dashboard Operativo y Analítico</h2>
+                <small class="text-muted">Investigación de Operaciones - Modelo de Colas M/M/s (Cafetería IUE)</small>
+            </div>
+            <a asp-controller="Home" asp-action="IniciarSesion" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 1: MÉTRICAS TEÓRICAS DEL MODELO M/M/s -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold">📊 Análisis Teórico del Sistema (Datos Iniciales del Proyecto)</h5>
+            <span class="badge bg-primary fs-6">Modelo M/M/2</span>
+        </div>
+        <div class="card-body">
+            @if (metricas != null)
+            {
+                <div class="row g-3">
+                    <!-- Tasa de Llegada (λ) -->
+                    <div class="col-md-3">
+                        <div class="p-3 border rounded bg-light text-center">
+                            <small class="text-muted fw-bold d-block">Tasa de Llegada (λ)</small>
+                            <span class="fs-3 fw-bold text-primary">@metricas.Lambda</span>
+                            <small class="d-block text-muted">clientes / hora</small>
+                        </div>
+                    </div>
+
+                    <!-- Tasa de Servicio (μ) -->
+                    <div class="col-md-3">
+                        <div class="p-3 border rounded bg-light text-center">
+                            <small class="text-muted fw-bold d-block">Atención por Servidor (μ)</small>
+                            <span class="fs-3 fw-bold text-success">@metricas.Mu</span>
+                            <small class="d-block text-muted">clientes / hora / servidor</small>
+                        </div>
+                    </div>
+
+                    <!-- Número de Servidores (s) -->
+                    <div class="col-md-3">
+                        <div class="p-3 border rounded bg-light text-center">
+                            <small class="text-muted fw-bold d-block">Número de Servidores (s)</small>
+                            <span class="fs-3 fw-bold text-dark">@metricas.Servidores</span>
+                            <small class="d-block text-muted">servidores activos</small>
+                        </div>
+                    </div>
+
+                    <!-- Factor de Utilización (ρ) -->
+                    <div class="col-md-3">
+                        <div class="p-3 border rounded bg-light text-center">
+                            <small class="text-muted fw-bold d-block">Utilización del Sistema (ρ)</small>
+                            <span class="fs-3 fw-bold @(metricas.FactorUtilizacion > 0.8 ? "text-danger" : "text-warning")">
+                                @((metricas.FactorUtilizacion * 100).ToString("F0"))%
+                            </span>
+                            <small class="d-block text-muted">capacidad ocupada</small>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- RESULTADOS RELEVANTES PARA LA PRESENTACIÓN -->
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-primary text-white text-center p-3">
+                            <small class="text-uppercase fw-bold">Probabilidad Sistema Vacío (P₀)</small>
+                            <h4 class="fw-bold mt-2 mb-0">@((metricas.P0 * 100).ToString("F1"))%</h4>
+                            <small class="mt-1">de tiempo sin fila</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-info text-white text-center p-3">
+                            <small class="text-uppercase fw-bold">Promedio en Cola (L_q)</small>
+                            <h4 class="fw-bold mt-2 mb-0">@metricas.Lq.ToString("F2")</h4>
+                            <small class="mt-1">estudiantes esperando</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-warning text-dark text-center p-3">
+                            <small class="text-uppercase fw-bold">Tiempo de Espera (W_q)</small>
+                            <h4 class="fw-bold mt-2 mb-0">@metricas.Wq.ToString("F1") min</h4>
+                            <small class="mt-1">tiempo antes de atención</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-secondary text-white text-center p-3">
+                            <small class="text-uppercase fw-bold">Tiempo Total Sistema (W)</small>
+                            <h4 class="fw-bold mt-2 mb-0">@metricas.W.ToString("F1") min</h4>
+                            <small class="mt-1">espera + atención (5 min)</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: SIMULACIÓN DE TURNOS EN VIVO (FILAU) -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 fw-bold">📋 Turnos en Fila Virtual (FilaU)</h5>
+                    <button class="btn btn-sm btn-light fw-bold" onclick="location.reload()">🔄 Actualizar Fila</button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Turno</th>
+                                    <th>Estudiante</th>
+                                    <th>Hora Solicitud</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model == null || !Model.Any())
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-muted py-4">No hay turnos activos en la fila virtual.</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var turno in Model)
+                                    {
+                                        <tr>
+                                            <td><span class="badge bg-dark fs-6">@turno.Codigo</span></td>
+                                            <td class="fw-bold">@turno.NombreEstudiante</td>
+                                            <td>@turno.HoraSolicitud.ToString("hh:mm tt")</td>
+                                            <td>
+                                                <span class="badge @(turno.Estado == "Atendiendo" ? "bg-success" : "bg-warning text-dark")">
+                                                    @turno.Estado
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (turno.Estado == "En Espera")
+                                                {
+                                                    <form asp-controller="Panel" asp-action="AtenderTurno" method="post" class="d-inline">
+                                                        <input type="hidden" name="idTurno" value="@turno.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-success fw-bold">Atender</button>
+                                                    </form>
+                                                }
+                                                else if (turno.Estado == "Atendiendo")
+                                                {
+                                                    <form asp-controller="Panel" asp-action="FinalizarTurno" method="post" class="d-inline">
+                                                        <input type="hidden" name="idTurno" value="@turno.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">Finalizar</button>
+                                                    </form>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-success text-white py-3">
+                    <h5 class="mb-0 fw-bold">☕ Estado Servidores</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 p-3 border rounded bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0">Servidor 1</h6>
+                            <span class="badge bg-success">Disponible</span>
+                        </div>
+                        <small class="text-muted d-block mt-1">Capacidad: 12 clientes/hora</small>
+                    </div>
+
+                    <div class="mb-3 p-3 border rounded bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0">Servidor 2</h6>
+                            <span class="badge bg-success">Disponible</span>
+                        </div>
+                        <small class="text-muted d-block mt-1">Capacidad: 12 clientes/hora</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

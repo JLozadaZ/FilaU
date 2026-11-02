@@ -1,8 +1,91 @@
+@model FilaU.Models.Turno
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Mi Turno Virtual - FilaU";
+    string nombre = ViewBag.NombreEstudiante ?? "Estudiante";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Panel Estudiante</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <!-- Encabezado de perfil -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="fw-bold mb-0">👋 Hola, @nombre</h5>
+                    <small class="text-muted">Cafetería IUE - Turno Virtual</small>
+                </div>
+                <a asp-controller="Home" asp-action="IniciarSesion" class="btn btn-outline-secondary btn-sm">Salir</a>
+            </div>
+
+            @if (Model == null)
+            {
+                <!-- Estado 1: El estudiante no ha pedido turno -->
+                <div class="card shadow border-0 rounded-4 text-center p-4">
+                    <div class="my-3">
+                        <span style="font-size: 3.5rem;">☕</span>
+                    </div>
+                    <h4 class="fw-bold">¿Listo para pedir tu almuerzo?</h4>
+                    <p class="text-muted">Solicita tu turno desde el celular y evita hacer fila físicamente en la cafetería.</p>
+
+                    <form asp-controller="Panel" asp-action="PedirTurno" method="post" class="mt-3">
+                        <input type="hidden" name="nombreEstudiante" value="@nombre" />
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm">
+                            🎫 Pedir Mi Turno Virtual
+                        </button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <!-- Estado 2: Turno asignado -->
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-primary text-white text-center py-4">
+                        <small class="text-uppercase tracking-wide fw-bold d-block opacity-75">Tu Turno Asignado</small>
+                        <h1 class="display-2 fw-bolder mb-0">@Model.Codigo</h1>
+                        <span class="badge @(Model.Estado == "Atendiendo" ? "bg-success" : "bg-warning text-dark") fs-6 mt-2">
+                            ● @Model.Estado
+                        </span>
+                    </div>
+
+                    <div class="card-body p-4 text-center">
+                        @if (Model.Estado == "En Espera")
+                        {
+                            <div class="row g-3 my-2">
+                                <div class="col-6">
+                                    <div class="p-3 border rounded-3 bg-light">
+                                        <small class="text-muted d-block fw-bold">Personas adelante</small>
+                                        <span class="fs-2 fw-bold text-dark">@ViewBag.PersonasAdelante</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 border rounded-3 bg-light">
+                                        <small class="text-muted d-block fw-bold">Tiempo estimado</small>
+                                        <span class="fs-2 fw-bold text-primary">~@ViewBag.TiempoEstimadoMin min</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-info py-2 mt-3 text-start">
+                                <small>💡 <strong>Tip:</strong> Puedes esperar sentado en el campus. Te notificaremos cuando tu turno pase a atención.</small>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success py-3 my-2">
+                                <h5 class="fw-bold mb-1">🎉 ¡Es tu turno!</h5>
+                                <small>Acércate inmediatamente a uno de los servidores en la cafetería.</small>
+                            </div>
+                        }
+
+                        <div class="mt-4">
+                            <button class="btn btn-outline-primary w-100 rounded-pill fw-bold" onclick="location.reload()">
+                                🔄 Actualizar Estado
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light text-center text-muted py-2">
+                        <small>Hora de solicitud: @Model.HoraSolicitud.ToString("hh:mm tt")</small>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>

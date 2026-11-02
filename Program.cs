@@ -4,6 +4,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<FilaU.Services.AuthService>();
+builder.Services.AddSingleton<FilaU.Services.ModeloColasService>();
+builder.Services.AddSingleton<FilaU.Services.TurnoService>();
+
 
 var app = builder.Build();
 
