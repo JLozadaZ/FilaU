@@ -8,10 +8,10 @@
     <div class="row mb-3">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="fw-bold text-dark mb-0"> Dashboard Operativo y Analítico</h2>
+                <h2 class="fw-bold text-dark mb-0">⚙️ Dashboard Operativo y Analítico</h2>
                 <small class="text-muted">Investigación de Operaciones - Modelo de Colas M/M/s (Cafetería IUE)</small>
             </div>
-            <a asp-controller="Home" asp-action="IniciarSesion" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
         </div>
     </div>
 
@@ -24,11 +24,11 @@
         </div>
     }
 
-    <!-- SECCIÓN 1: MÉTRICAS TEÓRICAS DEL MODELO M/M/s -->
+    <!-- SECCIÓN 1: MÉTRICAS TEÓRICAS DEL MODELO M/M/s (DIAGNÓSTICO HORA PICO) -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
-            <h5 class="mb-0 fw-bold"> Análisis Teórico del Sistema (Datos Iniciales del Proyecto)</h5>
-            <span class="badge bg-primary fs-6">Modelo M/M/2</span>
+            <h5 class="mb-0 fw-bold">📊 Análisis Teórico del Sistema (Datos Iniciales del Proyecto)</h5>
+            <span class="badge bg-danger fs-6">Modelo M/M/2</span>
         </div>
         <div class="card-body">
             @if (metricas != null)
@@ -39,7 +39,7 @@
                         <div class="p-3 border rounded bg-light text-center">
                             <small class="text-muted fw-bold d-block">Tasa de Llegada (λ)</small>
                             <span class="fs-3 fw-bold text-primary">@metricas.Lambda</span>
-                            <small class="d-block text-muted">clientes / hora</small>
+                            <small class="d-block text-muted">clientes / hora (24 / 15 min)</small>
                         </div>
                     </div>
 
@@ -48,7 +48,7 @@
                         <div class="p-3 border rounded bg-light text-center">
                             <small class="text-muted fw-bold d-block">Atención por Servidor (μ)</small>
                             <span class="fs-3 fw-bold text-success">@metricas.Mu</span>
-                            <small class="d-block text-muted">clientes / hora / servidor</small>
+                            <small class="d-block text-muted">clientes / hora / servidor (1.5 min)</small>
                         </div>
                     </div>
 
@@ -65,17 +65,17 @@
                     <div class="col-md-3">
                         <div class="p-3 border rounded bg-light text-center">
                             <small class="text-muted fw-bold d-block">Utilización del Sistema (ρ)</small>
-                            <span class="fs-3 fw-bold @(metricas.FactorUtilizacion > 0.8 ? "text-danger" : "text-warning")">
+                            <span class="fs-3 fw-bold text-danger">
                                 @((metricas.FactorUtilizacion * 100).ToString("F0"))%
                             </span>
-                            <small class="d-block text-muted">capacidad ocupada</small>
+                            <small class="d-block text-muted">capacidad requerida</small>
                         </div>
                     </div>
                 </div>
 
                 <hr class="my-4">
 
-                <!-- RESULTADOS RELEVANTES PARA LA PRESENTACIÓN -->
+                <!-- TARJETAS DE RESULTADOS TEÓRICOS -->
                 <div class="row g-3">
                     <div class="col-md-3">
                         <div class="card border-0 bg-primary text-white text-center p-3">
@@ -105,7 +105,7 @@
                         <div class="card border-0 bg-secondary text-white text-center p-3">
                             <small class="text-uppercase fw-bold">Tiempo Total Sistema (W)</small>
                             <h4 class="fw-bold mt-2 mb-0">@metricas.W.ToString("F1") min</h4>
-                            <small class="mt-1">espera + atención (5 min)</small>
+                            <small class="mt-1">espera + atención (1.5 min)</small>
                         </div>
                     </div>
                 </div>
@@ -118,8 +118,8 @@
         <div class="col-md-8">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
-                    <h5 class="mb-0 fw-bold"> Turnos en Fila Virtual (FilaU)</h5>
-                    <button class="btn btn-sm btn-light fw-bold" onclick="location.reload()"> Actualizar Fila</button>
+                    <h5 class="mb-0 fw-bold">📋 Turnos en Fila Virtual (FilaU)</h5>
+                    <button class="btn btn-sm btn-light fw-bold" onclick="location.reload()">🔄 Actualizar Fila</button>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -182,7 +182,7 @@
         <div class="col-md-4">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-success text-white py-3">
-                    <h5 class="mb-0 fw-bold"> Estado Servidores</h5>
+                    <h5 class="mb-0 fw-bold">☕ Estado Servidores</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3 p-3 border rounded bg-light">
@@ -192,7 +192,7 @@
                                 @(Model != null && Model.Any(t => t.Estado == "Atendiendo") ? "Atendiendo" : "Disponible")
                             </span>
                         </div>
-                        <small class="text-muted d-block mt-1">Capacidad: 12 clientes/hora</small>
+                        <small class="text-muted d-block mt-1">Capacidad: 40 clientes/hora (1.5 min)</small>
                     </div>
 
                     <div class="mb-3 p-3 border rounded bg-light">
@@ -202,50 +202,76 @@
                                 @(Model != null && Model.Count(t => t.Estado == "Atendiendo") > 1 ? "Atendiendo" : "Disponible")
                             </span>
                         </div>
-                        <small class="text-muted d-block mt-1">Capacidad: 12 clientes/hora</small>
+                        <small class="text-muted d-block mt-1">Capacidad: 40 clientes/hora (1.5 min)</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SECCIÓN 3: MÉTRICAS EN TIEMPO REAL (ANALÍTICA EN VIVO) -->
+    <!-- SECCIÓN 3: MÉTRICAS EN TIEMPO REAL COMPLETA (OBSERVADAS) -->
     <div class="card shadow-sm border-0 my-4">
         <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-3">
-            <h5 class="mb-0 fw-bold"> Analítica del Sistema en Tiempo Real (Observada)</h5>
-            <span class="badge bg-light text-dark fs-6">Se actualiza con la fila</span>
+            <h5 class="mb-0 fw-bold">🟢 Analítica del Sistema en Tiempo Real (Observada)</h5>
+            <span class="badge bg-light text-dark fs-6">Actualizado en vivo</span>
         </div>
         <div class="card-body">
             <p class="text-muted small mb-3">
-                Esta sección calcula el comportamiento real del sistema en este instante según los clientes conectados y los turnos atendidos.
+                Métricas calculadas dinámicamente según la cantidad de usuarios conectados y servidores ocupados en este instante.
             </p>
+
+            <!-- Fila 1: Parámetros del Sistema en Tiempo Real -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-3">
+                    <div class="p-3 border rounded bg-light text-center">
+                        <small class="text-muted fw-bold d-block">Tasa de Llegada Real (λ_real)</small>
+                        <span class="fs-4 fw-bold text-primary">@ViewBag.LambdaReal</span>
+                        <small class="d-block text-muted">clientes / hora est.</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="p-3 border rounded bg-light text-center">
+                        <small class="text-muted fw-bold d-block">Atención por Servidor (μ)</small>
+                        <span class="fs-4 fw-bold text-success">@ViewBag.MuReal</span>
+                        <small class="d-block text-muted">clientes / hora / servidor (1.5 min)</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="p-3 border rounded bg-light text-center">
+                        <small class="text-muted fw-bold d-block">Servidores Activos (s)</small>
+                        <span class="fs-4 fw-bold text-dark">@ViewBag.ServidoresReal</span>
+                        <small class="d-block text-muted">cajas operando</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="p-3 border rounded bg-light text-center">
+                        <small class="text-muted fw-bold d-block">Utilización Actual (ρ_real)</small>
+                        <span class="fs-4 fw-bold @(((double?)ViewBag.UtilizacionReal ?? 0.0) >= 1.0 ? "text-danger" : "text-success")">
+                            @((((double?)ViewBag.UtilizacionReal ?? 0.0) * 100).ToString("F0"))%
+                        </span>
+                        <small class="d-block text-muted">capacidad en uso</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fila 2: Métricas de Comportamiento Observado -->
             <div class="row g-3">
-                <!-- Ocupación Real -->
                 <div class="col-md-3">
                     <div class="card border-0 bg-light text-center p-3">
-                        <small class="text-uppercase fw-bold text-muted">Utilización Actual (ρ)</small>
-                        <h4 class="fw-bold mt-2 mb-0 text-success">
-                            @(((double)ViewBag.UtilizacionReal * 100).ToString("F0"))%
-                        </h4>
-                        <small class="mt-1 text-muted">servidores ocupados hoy</small>
-                    </div>
-                </div>
-
-                <!-- P0 Real -->
-                <div class="col-md-3">
-                    <div class="card border-0 bg-light text-center p-3">
-                        <small class="text-uppercase fw-bold text-muted">Sistema Vacío Ahora (P₀)</small>
+                        <small class="text-uppercase fw-bold text-muted">Sistema Vacío Ahora (P₀_real)</small>
                         <h4 class="fw-bold mt-2 mb-0 text-primary">
-                            @(((double)ViewBag.P0Real * 100).ToString("F0"))%
+                            @((((double?)ViewBag.P0Real ?? 0.0) * 100).ToString("F0"))%
                         </h4>
-                        <small class="mt-1 text-muted">estado actual</small>
+                        <small class="mt-1 text-muted">probabilidad actual</small>
                     </div>
                 </div>
 
-                <!-- Lq Real -->
                 <div class="col-md-3">
                     <div class="card border-0 bg-light text-center p-3">
-                        <small class="text-uppercase fw-bold text-muted">Personas en Cola Ahora (L_q)</small>
+                        <small class="text-uppercase fw-bold text-muted">Personas en Cola (L_q real)</small>
                         <h4 class="fw-bold mt-2 mb-0 text-info">
                             @ViewBag.LqReal
                         </h4>
@@ -253,14 +279,23 @@
                     </div>
                 </div>
 
-                <!-- Wq Real -->
                 <div class="col-md-3">
                     <div class="card border-0 bg-light text-center p-3">
-                        <small class="text-uppercase fw-bold text-muted">Tiempo Espera Estimado (W_q)</small>
+                        <small class="text-uppercase fw-bold text-muted">Espera en Cola (W_q real)</small>
                         <h4 class="fw-bold mt-2 mb-0 text-warning">
-                            @(((double)ViewBag.WqReal).ToString("F1")) min
+                            @(((double?)ViewBag.WqReal ?? 0.0).ToString("F1")) min
                         </h4>
-                        <small class="mt-1 text-muted">para el último turno</small>
+                        <small class="mt-1 text-muted">estimado en fila</small>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light text-center p-3">
+                        <small class="text-uppercase fw-bold text-muted">Tiempo Total Sistema (W real)</small>
+                        <h4 class="fw-bold mt-2 mb-0 text-secondary">
+                            @(((double?)ViewBag.WReal ?? 0.0).ToString("F1")) min
+                        </h4>
+                        <small class="mt-1 text-muted">espera + atención (1.5 min)</small>
                     </div>
                 </div>
             </div>
