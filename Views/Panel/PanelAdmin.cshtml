@@ -24,11 +24,11 @@
         </div>
     }
 
-    <!-- SECCIÓN 1: MÉTRICAS TEÓRICAS DEL MODELO M/M/s (DIAGNÓSTICO HORA PICO) -->
+    <!-- SECCIÓN 1: MÉTRICAS TEÓRICAS DEL MODELO M/M/s (DIAGNÓSTICO CON ATENCIÓN RÁPIDA DE 1 MIN) -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
             <h5 class="mb-0 fw-bold">📊 Análisis Teórico del Sistema (Datos Iniciales del Proyecto)</h5>
-            <span class="badge bg-danger fs-6">Modelo M/M/2</span>
+            <span class="badge bg-success fs-6">Modelo M/M/2 (Estable)</span>
         </div>
         <div class="card-body">
             @if (metricas != null)
@@ -43,12 +43,12 @@
                         </div>
                     </div>
 
-                    <!-- Tasa de Servicio (μ) -->
+                    <!-- Capacidad de Atención (μ) -->
                     <div class="col-md-3">
                         <div class="p-3 border rounded bg-light text-center">
-                            <small class="text-muted fw-bold d-block">Atención por Servidor (μ)</small>
+                            <small class="text-muted fw-bold d-block">Capacidad Atención (μ)</small>
                             <span class="fs-3 fw-bold text-success">@metricas.Mu</span>
-                            <small class="d-block text-muted">clientes / hora / servidor (1.5 min)</small>
+                            <small class="d-block text-muted">clientes / hora / servidor (1 min)</small>
                         </div>
                     </div>
 
@@ -65,7 +65,7 @@
                     <div class="col-md-3">
                         <div class="p-3 border rounded bg-light text-center">
                             <small class="text-muted fw-bold d-block">Utilización del Sistema (ρ)</small>
-                            <span class="fs-3 fw-bold text-danger">
+                            <span class="fs-3 fw-bold text-success">
                                 @((metricas.FactorUtilizacion * 100).ToString("F0"))%
                             </span>
                             <small class="d-block text-muted">capacidad requerida</small>
@@ -75,7 +75,7 @@
 
                 <hr class="my-4">
 
-                <!-- TARJETAS DE RESULTADOS TEÓRICOS -->
+                <!-- TARJETAS DE RESULTADOS TEÓRICOS CALCULADOS POR ERLANG-C -->
                 <div class="row g-3">
                     <div class="col-md-3">
                         <div class="card border-0 bg-primary text-white text-center p-3">
@@ -105,7 +105,7 @@
                         <div class="card border-0 bg-secondary text-white text-center p-3">
                             <small class="text-uppercase fw-bold">Tiempo Total Sistema (W)</small>
                             <h4 class="fw-bold mt-2 mb-0">@metricas.W.ToString("F1") min</h4>
-                            <small class="mt-1">espera + atención (1.5 min)</small>
+                            <small class="mt-1">espera + atención (1 min)</small>
                         </div>
                     </div>
                 </div>
@@ -192,7 +192,7 @@
                                 @(Model != null && Model.Any(t => t.Estado == "Atendiendo") ? "Atendiendo" : "Disponible")
                             </span>
                         </div>
-                        <small class="text-muted d-block mt-1">Capacidad: 40 clientes/hora (1.5 min)</small>
+                        <small class="text-muted d-block mt-1">Capacidad: 60 clientes/hora (1 min)</small>
                     </div>
 
                     <div class="mb-3 p-3 border rounded bg-light">
@@ -202,7 +202,7 @@
                                 @(Model != null && Model.Count(t => t.Estado == "Atendiendo") > 1 ? "Atendiendo" : "Disponible")
                             </span>
                         </div>
-                        <small class="text-muted d-block mt-1">Capacidad: 40 clientes/hora (1.5 min)</small>
+                        <small class="text-muted d-block mt-1">Capacidad: 60 clientes/hora (1 min)</small>
                     </div>
                 </div>
             </div>
@@ -232,9 +232,9 @@
 
                 <div class="col-md-3">
                     <div class="p-3 border rounded bg-light text-center">
-                        <small class="text-muted fw-bold d-block">Atención por Servidor (μ)</small>
+                        <small class="text-muted fw-bold d-block">Capacidad Atención (μ)</small>
                         <span class="fs-4 fw-bold text-success">@ViewBag.MuReal</span>
-                        <small class="d-block text-muted">clientes / hora / servidor (1.5 min)</small>
+                        <small class="d-block text-muted">clientes / hora / servidor (1 min)</small>
                     </div>
                 </div>
 
@@ -295,7 +295,7 @@
                         <h4 class="fw-bold mt-2 mb-0 text-secondary">
                             @(((double?)ViewBag.WReal ?? 0.0).ToString("F1")) min
                         </h4>
-                        <small class="mt-1 text-muted">espera + atención (1.5 min)</small>
+                        <small class="mt-1 text-muted">espera + atención (1 min)</small>
                     </div>
                 </div>
             </div>

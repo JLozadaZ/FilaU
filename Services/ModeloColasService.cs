@@ -19,9 +19,9 @@ namespace FilaU.Services
     {
         /// <summary>
         /// Calcula las métricas de Investigación de Operaciones para un sistema M/M/s.
-        /// Configurado con los datos de diagnóstico: λ = 96 (24 personas/15 min), μ = 40 (1.5 min por persona), s = 2 servidores.
+        /// Configurado con los nuevos datos: λ = 96 (24 personas/15 min), μ = 60 (1 min por persona), s = 2 servidores.
         /// </summary>
-        public ResultadosModeloColas CalcularMMs(double lambda = 96, double mu = 40, int s = 2)
+        public ResultadosModeloColas CalcularMMs(double lambda = 96, double mu = 60, int s = 2)
         {
             var resultados = new ResultadosModeloColas
             {
@@ -30,31 +30,28 @@ namespace FilaU.Services
                 Servidores = s
             };
 
-            // 1. Capacidad total de atención del sistema (s * μ) -> 2 * 40 = 80 clientes/hora
+            // 1. Capacidad total de atención del sistema (s * μ) -> 2 * 60 = 120 clientes/hora
             double capacidadTotal = s * mu;
 
-            // 2. Factor de utilización (ρ = λ / (s * μ)) -> 96 / 80 = 1.20 (120%)
+            // 2. Factor de utilización (ρ = λ / (s * μ)) -> 96 / 120 = 0.80 (80%)
             resultados.FactorUtilizacion = lambda / capacidadTotal;
 
             // Validación de estabilidad del sistema (λ < s * μ)
             if (resultados.FactorUtilizacion >= 1.0)
             {
-                // El sistema está teóricamente saturado en hora pico (ρ = 120%)
                 resultados.EsEstable = false;
-                
-                // Valores proyectados de ejemplo para la presentación en hora pico
-                resultados.P0 = 0.045;   // 4.5% de probabilidad de vaciado
-                resultados.Lq = 5.80;    // 5.80 estudiantes en cola
-                resultados.L = 7.80;     // 7.80 en el sistema total
-                resultados.Wq = 3.6;     // 3.6 minutos de espera en cola
-                resultados.W = 5.1;      // 5.1 minutos totales en el sistema (3.6 min + 1.5 min atención)
+                resultados.P0 = 0.0;
+                resultados.Lq = 0.0;
+                resultados.L = 0.0;
+                resultados.Wq = 0.0;
+                resultados.W = 0.0;
                 return resultados;
             }
 
             resultados.EsEstable = true;
 
-            // 3. Cálculo estricto de P0 para sistemas estables (ρ < 1.0)
-            double r = lambda / mu;
+            // 3. Cálculo estricto de P0 para sistemas estables (ρ = 0.80)
+            double r = lambda / mu; // r = 96 / 60 = 1.6
             double suma = 0;
 
             for (int n = 0; n < s; n++)
@@ -70,11 +67,11 @@ namespace FilaU.Services
             double denominadorLq = Factorial(s) * Math.Pow(1.0 - resultados.FactorUtilizacion, 2);
             resultados.Lq = numeradorLq / denominadorLq;
 
-            // 5. Wq: Tiempo promedio de espera en la COLA (minutos)
+            // 5. Wq: Tiempo promedio de espera en la COLA (en minutos)
             double wqHoras = resultados.Lq / lambda;
             resultados.Wq = wqHoras * 60.0;
 
-            // 6. W: Tiempo promedio total en el SISTEMA (minutos)
+            // 6. W: Tiempo promedio total en el SISTEMA (en minutos, espera + 1 min de atención)
             double wHoras = wqHoras + (1.0 / mu);
             resultados.W = wHoras * 60.0;
 
